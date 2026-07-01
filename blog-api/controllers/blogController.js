@@ -28,4 +28,49 @@ const createBlog = async (req, res) => {
   }
 };
 
-module.exports = { createBlog };
+const getAllBlogs = async (req, res) => {
+  try {
+    const blogs = await Blog.find()
+      .populate("author", "name email")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      count: blogs.length,
+      blogs,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+const getBlogById = async (req, res) => {
+  try {
+    const blog = await Blog.findById(req.params.id).populate(
+      "author",
+      "name email",
+    );
+
+    if (!blog) {
+      return res.status(404).json({
+        success: false,
+        blog,
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      blog,
+    })
+  } catch (error) {
+    res.status(500).json({
+      sucess: false,
+      message: error.message,
+    });
+  }
+};
+
+module.exports = { createBlog, getAllBlogs, getBlogById };
