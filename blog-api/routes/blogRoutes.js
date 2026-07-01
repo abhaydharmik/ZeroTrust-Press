@@ -1,13 +1,23 @@
-const express = require("express")
-const router = express.Router()
+const express = require("express");
+const router = express.Router();
 
-const upload = require("../middleware/uploadMiddlware")
-const { createBlog, getAllBlogs, getBlogById } = require("../controllers/blogController")
-const authMiddleware = require("../middleware/authMiddleware")
+const upload = require("../middleware/uploadMiddlware");
+const {
+  createBlog,
+  getAllBlogs,
+  getBlogById,
+  updateBlog,
+  deleteBlog,
+} = require("../controllers/blogController");
+const authMiddleware = require("../middleware/authMiddleware");
 
-router.get("/", getAllBlogs)
-router.get("/:id", getBlogById)
+router.post("/", authMiddleware, upload.single("image"), createBlog);
 
-router.post("/", authMiddleware ,upload.single("image"), createBlog)
+router.get("/", getAllBlogs);
+router.get("/:id", getBlogById);
 
-module.exports = router
+router.put("/:id", authMiddleware, upload.single("image"), updateBlog);
+
+router.delete("/:id", authMiddleware, deleteBlog);
+
+module.exports = router;
