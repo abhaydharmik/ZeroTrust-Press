@@ -8,6 +8,7 @@ const {
   getBlogById,
   updateBlog,
   deleteBlog,
+  likeBlog,
 } = require("../controllers/blogController");
 const authMiddleware = require("../middleware/authMiddleware");
 
@@ -19,5 +20,7 @@ router.get("/:id", getBlogById);
 router.put("/:id", authMiddleware, upload.single("image"), updateBlog);
 
 router.delete("/:id", authMiddleware, deleteBlog);
+
+router.put("/:id/like", authMiddleware, likeBlog)
 
 module.exports = router;
