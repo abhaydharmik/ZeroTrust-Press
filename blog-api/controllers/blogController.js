@@ -231,7 +231,100 @@ const likeBlog = async (req, res) => {
       message: "Blog liked",
       totalLikes: blog.likes.length,
     });
-  } catch (error) {}
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+const addComment = async (req, res) => {
+  try {
+    const { text } = req.body;
+
+    if (!text) {
+      return res.status(400).json({
+        success: false,
+        message: "Comment text is required",
+      });
+    }
+
+    const blog = await Blog.findById(req.params.id);
+
+    if (!blog) {
+      return res.status(404).json({
+        success: false,
+        message: "Blog not found",
+      });
+    }
+
+    blog.comments.push({
+      user: req.user._id,
+      text,
+    });
+
+    await blog.save();
+
+    await blog.populate("comments.user", "name email");
+
+    res.status(201).json({
+      success: true,
+      message: "Comment added successfully",
+      comments: blog.comments,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+const deleteComment = async (req, res) => {
+  try {
+    const blog = await Blog.findById(req.params.id);
+
+    if (!blog) {
+      return res.status(404).json({
+        success: false,
+        message: "Blog not found",
+      });
+    }
+
+    const comment = blog.comments.id(req.params.commentId);
+
+    if (!comment) {
+      return res.status(404).json({
+        success: false,
+        message: "Comment not found",
+      });
+    }
+
+    const isOwner = comment.user.toString() === req.user._id.toString();
+
+    const isAdmin = req.user.role === "admin";
+
+    if (!isOwner && !isAdmin) {
+      return res.status(403).json({
+        success: false,
+        message: "Not authorized to delete this comment",
+      });
+    }
+
+    comment.deleteOne();
+
+    await blog.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Comment deleted successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
 };
 
 module.exports = {
@@ -241,4 +334,6 @@ module.exports = {
   updateBlog,
   deleteBlog,
   likeBlog,
+  addComment,
+  deleteComment,
 };
