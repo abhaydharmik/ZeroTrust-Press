@@ -327,9 +327,64 @@ const deleteComment = async (req, res) => {
   }
 };
 
+const getMyBlogs = async (req, res) => {
+  try {
+    const blogs = await Blog.find({
+      author: req.user._id,
+    })
+      .populate("author", "name email")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      totalBlogs: blogs.length,
+      blogs,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+const getDashboardStats = async (req, res) => {
+  try {
+    const blogs = await Blog.find({ author: req.user._id });
+
+    const totalBlogs = blogs.length;
+
+    const totalLikes = blogs.reduce(
+      (total, blog) => total + blog.likes.length,
+      0,
+    );
+
+    const totalComments = blogs.reduce(
+      (total, blog) => total + blog.comments.length,
+      0,
+    );
+
+    res.status(200).json({
+      success: true,
+      stats: {
+        totalBlogs,
+        totalLikes,
+        totalComments,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   createBlog,
   getAllBlogs,
+  getMyBlogs,
+  getDashboardStats,
   getBlogById,
   updateBlog,
   deleteBlog,
