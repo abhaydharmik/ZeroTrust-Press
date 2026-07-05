@@ -3,6 +3,8 @@ import { getBlogs } from "../services/blogService";
 import Loader from "../components/common/Loader";
 import BlogCard from "../components/blog/BlogCard";
 import SearchBar from "../components/blog/SearchBar";
+import CategoryFilter from "../components/blog/CategoryFilter";
+import Pagination from "../components/blog/Pagination";
 
 const Home = () => {
   const [blogs, setBlogs] = useState([]);
@@ -11,12 +13,25 @@ const Home = () => {
 
   const [search, setSearch] = useState("");
 
+  const [category, setCategory] = useState("");
+
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const [totalPages, setTotalPages] = useState(1);
+
   const fetchBlogs = async () => {
     try {
       setLoading(true);
-      const { data } = await getBlogs({ search });
+      const { data } = await getBlogs({
+        search,
+        category,
+        page: currentPage,
+        limit: 2,
+      });
 
       setBlogs(data.blogs);
+
+      setTotalPages(data.totalPages);
     } catch (error) {
       console.log(error);
     } finally {
@@ -30,7 +45,12 @@ const Home = () => {
     }, 500);
 
     return () => clearTimeout(timer);
-  }, [search]);
+  }, [search, category, currentPage]);
+
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [search, category])
+  
 
   if (loading) return <Loader />;
 
@@ -40,6 +60,7 @@ const Home = () => {
 
       <div className="mb-10 flex justify-center">
         <SearchBar search={search} setSearch={setSearch} />
+        <CategoryFilter category={category} setCategory={setCategory} />
       </div>
 
       {blogs.length === 0 ? (
@@ -55,6 +76,12 @@ const Home = () => {
           ))}
         </div>
       )}
+
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        setCurrentPage={setCurrentPage}
+      />
     </div>
   );
 };
