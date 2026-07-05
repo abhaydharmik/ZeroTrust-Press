@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }) => {
 
 
   // Register
-  const register = async () => {
+  const register = async (formData) => {
     const { data } = await registerUser(formData);
 
     localStorage.setItem("token", data.token);
