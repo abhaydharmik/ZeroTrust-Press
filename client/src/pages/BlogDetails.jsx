@@ -4,7 +4,6 @@ import { addComment, getBlogById, likeBlog } from "../services/blogService";
 import Loader from "../components/common/Loader";
 import { useAuth } from "../context/AuthContext";
 import toast from "react-hot-toast";
-import { Calendar, Heart, MessageCircle, Send, User } from "lucide-react";
 import BlogHeader from "../components/blog/BlogHeader";
 import LikeButton from "../components/blog/LikeButton";
 import CommentForm from "../components/blog/CommentForm";
@@ -47,7 +46,7 @@ const BlogDetails = () => {
 
       await likeBlog(blog._id);
 
-      fetchBlog();
+      await fetchBlog();
     } catch (error) {
       toast.error(error.response?.data?.message);
     } finally {
@@ -71,7 +70,7 @@ const BlogDetails = () => {
 
       setComment("");
 
-      fetchBlog();
+      await fetchBlog();
     } catch (error) {
       toast.error(error.response?.data?.message);
     } finally {
@@ -91,14 +90,14 @@ const BlogDetails = () => {
     );
   }
 
-  const liked = user && blog.likes.some((like) => like === user._id);
+  const liked = user && blog.likes.some((like) => like.toString() === user._id);
 
   return (
     <div className="max-w-5xl mx-auto px-5 py-10">
       <img
         src={
           blog.image
-            ? "http://localhost:5000/uploads/${blog.image"
+            ? `http://localhost:5000/uploads/${blog.image}`
             : "https://placehold.co/1200x600?text=No+Image"
         }
         alt={blog.title}
