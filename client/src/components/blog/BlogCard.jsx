@@ -37,7 +37,7 @@ const BlogCard = ({ blog }) => {
           </div>
         </div>
 
-        <Link to={`/blogs/${blog._id}`} className="mt-6 inline-flex items-center gap-2 font-semibold hover:gap-3 transition-all">
+        <Link to={`/blog/${blog._id}`} className="mt-6 inline-flex items-center gap-2 font-semibold hover:gap-3 transition-all">
           Read More <ArrowRight size={18} />{" "}
         </Link>
       </div>

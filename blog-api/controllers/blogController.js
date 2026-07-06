@@ -87,10 +87,9 @@ const getAllBlogs = async (req, res) => {
 
 const getBlogById = async (req, res) => {
   try {
-    const blog = await Blog.findById(req.params.id).populate(
-      "author",
-      "name email",
-    );
+    const blog = await Blog.findById(req.params.id)
+      .populate("author", "name email")
+      .populate("comments.user", "name email");
 
     if (!blog) {
       return res.status(404).json({
