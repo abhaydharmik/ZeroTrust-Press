@@ -12,7 +12,11 @@ export const createBlog = (formData) =>
   });
 
 export const updateBlog = (id, formData) =>
-  axiosInstance.put(`/blogs/${id}`, formData);
+  axiosInstance.put(`/blogs/${id}`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    }
+  });
 
 export const deleteBlog = (id) => axiosInstance.delete(`/blogs/${id}`);
 
