@@ -7,6 +7,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import BlogDetails from "./pages/BlogDetails";
 import CreateBlog from "./pages/CreateBlog";
 import EditBlog from "./pages/EditBlog";
+import MyBlogs from "./pages/MyBlogs";
 
 const App = () => {
   return (
@@ -36,6 +37,14 @@ const App = () => {
         element={
           <ProtectedRoute>
             <EditBlog />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/my-blogs"
+        element={
+          <ProtectedRoute>
+            <MyBlogs />
           </ProtectedRoute>
         }
       />
