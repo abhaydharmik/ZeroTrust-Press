@@ -5,7 +5,3 @@ export const registerUser = (userData) =>
 
 export const loginUser = (userData) =>
   axiosInstance.post("/auth/login", userData);
-
-export const getProfile = () =>
-  axiosInstance.get("/auth/profile");
-
