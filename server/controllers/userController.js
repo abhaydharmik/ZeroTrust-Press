@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const Blog = require("../models/Blog");
 const bcrypt = require("bcryptjs");
 
 // =========================
@@ -15,9 +16,27 @@ const getUserProfile = async (req, res) => {
       });
     }
 
+    const blogs = await Blog.find({
+      author: user._id,
+    });
+
+    const totalBlogs = blogs.length;
+
+    const totalLikes = blogs.reduce((acc, blog) => acc + blog.likes.length, 0);
+
+    const totalComments = blogs.reduce(
+      (acc, blog) => acc + blog.comments.length,
+      0,
+    );
+
     res.status(200).json({
       success: true,
-      user: req.user,
+      user: {
+        ...user.toObject(),
+        totalBlogs,
+        totalLikes,
+        totalComments,
+      },
     });
   } catch (error) {
     res.status(500).json({

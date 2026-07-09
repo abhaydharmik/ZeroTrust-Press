@@ -8,6 +8,7 @@ import BlogDetails from "./pages/BlogDetails";
 import CreateBlog from "./pages/CreateBlog";
 import EditBlog from "./pages/EditBlog";
 import MyBlogs from "./pages/MyBlogs";
+import Profile from "./pages/Profile";
 
 const App = () => {
   return (
@@ -45,6 +46,14 @@ const App = () => {
         element={
           <ProtectedRoute>
             <MyBlogs />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <Profile />
           </ProtectedRoute>
         }
       />
