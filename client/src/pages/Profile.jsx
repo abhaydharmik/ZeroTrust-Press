@@ -7,11 +7,13 @@ import ProfileStats from "../components/profile/ProfileStats";
 
 import { getProfile } from "../services/userService";
 import EditProfileModal from "../components/profile/EditProfileModal";
+import ChangePasswordModal from "../components/profile/ChangePasswordModal";
 
 const Profile = () => {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [showEditModal, setShowEditModal] = useState(false)
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
 
   const fetchProfile = async () => {
     try {
@@ -153,17 +155,33 @@ const Profile = () => {
       {/* Buttons */}
 
       <div className="flex gap-4 mt-10">
-        <button onClick={()=> setShowEditModal(true)} className="bg-black text-white px-6 py-3 rounded-xl">
+        <button
+          onClick={() => setShowEditModal(true)}
+          className="bg-black text-white px-6 py-3 rounded-xl"
+        >
           Edit Profile
         </button>
 
-        <button className="border px-6 py-3 rounded-xl">Change Password</button>
+        <button
+          onClick={() => setShowPasswordModal(true)}
+          className="border px-6 py-3 rounded-xl hover:bg-black hover:text-white transition"
+        >
+          Change Password
+        </button>
       </div>
 
-      <EditProfileModal isOpen={showEditModal}
-      onClose={()=> setShowEditModal(false)}
-      profile={profile}
-      onProfileUpdated={fetchProfile}
+      <EditProfileModal
+        isOpen={showEditModal}
+        onClose={() => setShowEditModal(false)}
+        profile={profile}
+        onProfileUpdated={fetchProfile}
+      />
+      <ChangePasswordModal
+        isOpen={showPasswordModal}
+        onClose={() => setShowPasswordModal(false)}
+        onSuccess={() => {
+          setShowPasswordModal(false);
+        }}
       />
     </div>
   );
