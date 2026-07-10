@@ -8,6 +8,7 @@ import ProfileStats from "../components/profile/ProfileStats";
 import { getProfile } from "../services/userService";
 import EditProfileModal from "../components/profile/EditProfileModal";
 import ChangePasswordModal from "../components/profile/ChangePasswordModal";
+import AvatarUpload from "../components/profile/AvatarUpload";
 
 const Profile = () => {
   const [profile, setProfile] = useState(null);
@@ -31,6 +32,16 @@ const Profile = () => {
     fetchProfile();
   }, []);
 
+  const handleAvatarUpload = (avatar) => {
+    setProfile((prev) => ({
+      ...prev,
+      avatar,
+    }));
+
+    // Optional: Get latest profile from backend
+    fetchProfile();
+  };
+
   if (loading) {
     return <Loader />;
   }
@@ -51,7 +62,19 @@ const Profile = () => {
     <div className="max-w-6xl mx-auto px-5 py-10">
       {/* Profile Header */}
 
-      <ProfileHeader profile={profile} />
+      <div className="grid lg:grid-cols-3 gap-8">
+        {/* Left */}
+
+        <div>
+          <AvatarUpload profile={profile} onUpload={handleAvatarUpload} />
+        </div>
+
+        {/* Right */}
+
+        <div className="lg:col-span-2">
+          <ProfileHeader profile={profile} />
+        </div>
+      </div>
 
       {/* Statistics */}
 

@@ -2,7 +2,9 @@ import { CalendarDays, Mail, MapPin } from "lucide-react";
 
 const ProfileHeader = ({ profile }) => {
   const avatarUrl = profile.avatar
-    ? `http://localhost:5000/uploads/${profile.avatar}`
+    ? profile.avatar.startsWith("http")
+      ? profile.avatar
+      : `http://localhost:5000/uploads/${profile.avatar}`
     : `https://ui-avatars.com/api/?name=${encodeURIComponent(
         profile.name,
       )}&background=000000&color=ffffff&size=256`;
