@@ -1,18 +1,25 @@
-const express = require("express")
+const express = require("express");
 
-const router = express.Router()
+const router = express.Router();
 
-const authMiddleware = require("../middleware/authMiddleware")
+const authMiddleware = require("../middleware/authMiddleware");
 
-const admin = require("../middleware/adminMiddleware")
+const adminMiddleware = require("../middleware/adminMiddleware");
 
-router.get("/dashboard", authMiddleware, admin, (req, res)=> {
+const { getDashboardStats } = require("../controllers/adminController");
+
+router.get(
+  "/dashboard",
+  authMiddleware,
+  adminMiddleware,
+  getDashboardStats,
+  (req, res) => {
     res.status(200).json({
-        success: true,
-        message: "Welcome Admin",
-        admin:  req.user,
-    })
-})
+      success: true,
+      message: "Welcome Admin",
+      admin: req.user,
+    });
+  },
+);
 
-module.exports = router
-
+module.exports = router;
