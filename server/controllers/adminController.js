@@ -196,9 +196,92 @@ const updateUserRole = async (req, res) => {
   }
 }
 
+const getAllBlogs = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 10
+    const search = req.query.search || ""
+
+    const skip = (page - 1) * limit
+
+    const filter = {
+      $or: [
+        {
+          title: {
+            $regex: search,
+            $options: "i",
+          }
+        },
+        {
+          category: {
+            $regex: search,
+            $options: "i",
+          }
+        }
+      ]
+    }
+
+    const [blogs, totalBlogs] = await Promise.all([
+      Blog.find(filter).populate("author", "name email avatar")
+      .sort({createdAt: -1}).skip(skip).limit(limit),
+
+      Blog.countDocuments(filter)
+    ])
+
+    res.status(200).json({
+      success: true,
+      blogs,
+      pagination: {
+        currentPage: page,
+        totalPages: Math.ceil(totalBlogs / limit),
+        totalBlogs,
+        limit,
+      }
+    })
+
+  } catch (error) {
+    console.error(error)
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch blogs."
+    })
+  }
+}
+
+const deleteBlog = async (req, res) => {
+  try {
+    const blog = await Blog.findById(req.params.id)
+
+    if(!blog){
+      return res.status(404).json({
+        success: false,
+        message: "Blog not found.",
+      })
+    }
+
+    await blog.deleteOne()
+
+    res.status(200).json({
+      success: true,
+      message: "Blog deleted successfully.",
+    })
+
+  } catch (error) {
+    console.error(error)
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to delete blog.",
+    })
+  }
+}
+
 module.exports = {
   getDashboardStats,
   getAllUsers,
   deleteUser,
   updateUserRole,
+  getAllBlogs,
+  deleteBlog,
 };
