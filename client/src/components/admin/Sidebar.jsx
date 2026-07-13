@@ -1,8 +1,18 @@
 import React from "react";
 import { FileText, LayoutDashboard, LogOut, Users, X } from "lucide-react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
+  const { logout } = useAuth();
+
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
+
   const navItems = [
     {
       name: "Dashboard",
@@ -36,7 +46,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 
       <aside
         className={`fixed top-0 left-0 z-50 w-64 h-screen bg-black text-white transform transition-transform duration-300 
-            ${sidebarOpen ? "translate-x-40" : "-translate-x-full"} lg:translate-x-0`}
+            ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}
       >
         {/* Header */}
 
@@ -72,9 +82,13 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
         {/* Footer */}
 
         <div className="absolute bottom-0 w-full border-t border-gray-800 p-5">
-            <button className="flex w-full items-center gap-3 rounded-lg px-3 py-3 hover:bg-red-600 transition">
-                <LogOut size={20} />
-            </button>
+          <button
+            onClick={handleLogout}
+            className="flex w-full items-center gap-3 rounded-lg px-3 py-3 hover:bg-red-600 transition"
+          >
+            <LogOut size={20} />
+            <span>Logout</span>
+          </button>
         </div>
       </aside>
     </>
