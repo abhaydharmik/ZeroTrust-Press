@@ -9,6 +9,11 @@ import CreateBlog from "./pages/CreateBlog";
 import EditBlog from "./pages/EditBlog";
 import MyBlogs from "./pages/MyBlogs";
 import Profile from "./pages/Profile";
+import AdminLayout from "./layouts/AdminLayout";
+import Dashboard from "./pages/admin/Dashboard";
+import Users from "./pages/admin/Users";
+import Blogs from "./pages/admin/Blogs";
+import ProtectedAdminRoute from "./components/admin/ProtectedAdminRoute";
 
 const App = () => {
   return (
@@ -20,14 +25,6 @@ const App = () => {
         element={
           <ProtectedRoute>
             <Home />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/dashboard"
-        element={
-          <ProtectedRoute>
-            <Register />
           </ProtectedRoute>
         }
       />
@@ -64,6 +61,18 @@ const App = () => {
           </ProtectedRoute>
         }
       />
+      <Route
+        path="/admin"
+        element={
+          <ProtectedAdminRoute>
+            <AdminLayout />
+          </ProtectedAdminRoute>
+        }
+      >
+        <Route index element={<Dashboard />} />
+        <Route path="users" element={<Users />} />
+        <Route path="blogs" element={<Blogs />} />
+      </Route>
     </Routes>
   );
 };
