@@ -75,6 +75,68 @@ const Dashboard = () => {
           icon={<Tag size={28} />}
         />
       </div>
+
+      {/* Latest Users */}
+
+      <div className="bg-white rounded-2xl border">
+        <div className="border-b px-6 py-4">
+          <h2 className="text-xl font-bold">Latest Users</h2>
+        </div>
+
+        {dashboard.latestUsers.length === 0 ? (
+          <div className="text-center p-8 text-gray-500">No users found.</div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b bg-gray-50">
+                  <th className="px-6 py-4 text-left">User</th>
+                  <th className="px-6 py-4 text-left">Email</th>
+                  <th className="px-6 py-4 text-left">Role</th>
+                  <th className="px-6 py-4 text-left">Joined</th>
+                </tr>
+              </thead>
+              <tbody>
+                {dashboard.latestUsers.map((user) => {
+                  const avatar = user.avatar
+                    ? user.avatar.startsWith("http")
+                      ? user.avatar
+                      : `http://localhost:5000/uploads/${user.avatar}`
+                    : `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=000000&color=ffffff`;
+                  return (
+                    <tr className="border-b hover:bg-gray-50 transition">
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-3">
+                          <img
+                            src={avatar}
+                            alt={user.name}
+                            className="w-10 h-10 rounded-full border object-cover"
+                          />
+                          <span className="font-medium">{user.name}</span>
+                        </div>
+                      </td>
+
+                      <td className="px-6 py-4">{user.email}</td>
+
+                      <td className="px-6 py-4">
+                        <span
+                          className={`px-3 py-4 rounded-full text-sm font-medium ${user.role === "admin" ? "bg-black text-white" : "bg-gray-200 text-black"}`}
+                        >
+                          {user.role}
+                        </span>
+                      </td>
+
+                      <td className="px-6 py-4">
+                        {new Date(user.createdAt).toLocaleDateString()}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

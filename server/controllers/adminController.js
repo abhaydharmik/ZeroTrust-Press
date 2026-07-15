@@ -88,121 +88,118 @@ const getAllUsers = async (req, res) => {
         .skip(skip)
         .limit(limit),
 
-        User.countDocuments(filter)
+      User.countDocuments(filter),
     ]);
 
     res.status(200).json({
-        success: true,
+      success: true,
 
-        users,
+      users,
 
-        pagination: {
-            currentPage: page,
-            totalPages: Math.ceil(totalUsers / limit),
-            totalUsers,
-            limit,
-        }
-    })
+      pagination: {
+        currentPage: page,
+        totalPages: Math.ceil(totalUsers / limit),
+        totalUsers,
+        limit,
+      },
+    });
   } catch (error) {
-    console.error(error)
+    console.error(error);
 
     res.status(500).json({
-        success: false,
-        message: "Failed to fetch users.",
-    })
+      success: false,
+      message: "Failed to fetch users.",
+    });
   }
 };
 
 const deleteUser = async (req, res) => {
-    try {
-        const user = await User.findById(req.params.id)
-
-        if(!user){
-            return res.status(404).json({
-                success: false,
-                message: "User not found.",
-            })
-        }
-
-        if(user.role === "admin"){
-            return res.status(200).json({
-                success: false,
-                message: "Cannot delete an admin account.",
-            })
-        }
-
-        await user.deleteOne()
-
-        res.status(200).json({
-            success: true,
-            message: "User deleted successfully.",
-        })
-
-    } catch (error) {
-        console.error(error)
-
-        res.status(500).json({
-            success: false,
-            message: "Failed to delete user.",
-        })
-    }
-}
-
-const updateUserRole = async (req, res) => {
   try {
-    
-    const {role} = req.body
+    const user = await User.findById(req.params.id);
 
-    if(!["user", "admin"].includes(role)){
-      return res.status(400).json({
-        success: false,
-        message: "Invalid role.",
-      })
-    }
-
-    const user = await User.findById(req.params.id)
-
-    if(!user){
+    if (!user) {
       return res.status(404).json({
         success: false,
         message: "User not found.",
-      })
+      });
     }
 
-    if(user._id.toString() === req.user._id.toString()){
+    if (user.role === "admin") {
+      return res.status(200).json({
+        success: false,
+        message: "Cannot delete an admin account.",
+      });
+    }
+
+    await user.deleteOne();
+
+    res.status(200).json({
+      success: true,
+      message: "User deleted successfully.",
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to delete user.",
+    });
+  }
+};
+
+const updateUserRole = async (req, res) => {
+  try {
+    const { role } = req.body;
+
+    if (!["user", "admin"].includes(role)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid role.",
+      });
+    }
+
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found.",
+      });
+    }
+
+    if (user._id.toString() === req.user._id.toString()) {
       return res.status(400).json({
         success: false,
         message: "You cannot change your own role.",
-      })
+      });
     }
 
-    user.role = role
+    user.role = role;
 
-    await user.save()
+    await user.save();
 
     res.status(200).json({
       success: true,
       message: "User role updated successfully.",
       user,
-    })
-
+    });
   } catch (error) {
-     console.error(error)
+    console.error(error);
 
-     res.status(500).json({
+    res.status(500).json({
       success: false,
-      message: "Failed to update user role."
-     })
+      message: "Failed to update user role.",
+    });
   }
-}
+};
 
 const getAllBlogs = async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1
-    const limit = parseInt(req.query.limit) || 10
-    const search = req.query.search || ""
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const search = req.query.search || "";
 
-    const skip = (page - 1) * limit
+    const skip = (page - 1) * limit;
 
     const filter = {
       $or: [
@@ -210,23 +207,26 @@ const getAllBlogs = async (req, res) => {
           title: {
             $regex: search,
             $options: "i",
-          }
+          },
         },
         {
           category: {
             $regex: search,
             $options: "i",
-          }
-        }
-      ]
-    }
+          },
+        },
+      ],
+    };
 
     const [blogs, totalBlogs] = await Promise.all([
-      Blog.find(filter).populate("author", "name email avatar")
-      .sort({createdAt: -1}).skip(skip).limit(limit),
+      Blog.find(filter)
+        .populate("author", "name email avatar")
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit),
 
-      Blog.countDocuments(filter)
-    ])
+      Blog.countDocuments(filter),
+    ]);
 
     res.status(200).json({
       success: true,
@@ -236,46 +236,44 @@ const getAllBlogs = async (req, res) => {
         totalPages: Math.ceil(totalBlogs / limit),
         totalBlogs,
         limit,
-      }
-    })
-
+      },
+    });
   } catch (error) {
-    console.error(error)
+    console.error(error);
 
     res.status(500).json({
       success: false,
-      message: "Failed to fetch blogs."
-    })
+      message: "Failed to fetch blogs.",
+    });
   }
-}
+};
 
 const deleteBlog = async (req, res) => {
   try {
-    const blog = await Blog.findById(req.params.id)
+    const blog = await Blog.findById(req.params.id);
 
-    if(!blog){
+    if (!blog) {
       return res.status(404).json({
         success: false,
         message: "Blog not found.",
-      })
+      });
     }
 
-    await blog.deleteOne()
+    await blog.deleteOne();
 
     res.status(200).json({
       success: true,
       message: "Blog deleted successfully.",
-    })
-
+    });
   } catch (error) {
-    console.error(error)
+    console.error(error);
 
     res.status(500).json({
       success: false,
       message: "Failed to delete blog.",
-    })
+    });
   }
-}
+};
 
 module.exports = {
   getDashboardStats,
