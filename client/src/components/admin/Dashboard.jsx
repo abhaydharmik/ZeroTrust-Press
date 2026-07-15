@@ -137,6 +137,87 @@ const Dashboard = () => {
           </div>
         )}
       </div>
+
+      {/* Latest Blog */}
+
+      <div className="bg-white rounded-2xl border">
+        <div className="border-b px-6 py-4">
+          <h2 className="text-xl font-bold">Latest Blogs</h2>
+        </div>
+
+        {dashboard.latestBlogs.length === 0 ? (
+          <div className="p-8  text-center text-gray-500">No blogs found.</div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b bg-gray-50">
+                  <th className="px-6 py-4 text-left">Blog</th>
+                  <th className="px-6 py-4 text-left">Category</th>
+                  <th className="px-6 py-4 text-left">Author</th>
+                  <th className="px-6 py-4 text-left">Created</th>
+                </tr>
+              </thead>
+              <tbody>
+                {dashboard.latestBlogs.map((blog) => {
+                  const image = blog.image
+                    ? blog.image.startsWith("http")
+                      ? blog.image
+                      : `http://localhost:5000/uploads/${blog.image}`
+                    : "https://placeholder.co/100x70?text=No+Image";
+
+                  return (
+                    <tr
+                      key={blog._id}
+                      className="border-b hover:bg-gray-50 transition"
+                    >
+                      {/* Blog */}
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-4">
+                          <img
+                            src={image}
+                            alt={blog.title}
+                            className="w-20 h-14 rounded-lg border object-cover"
+                          />
+                          <div>
+                            <h3 className="font-semibold">{blog.title}</h3>
+                            <p className="text-sm text-gray-500 line-clamp-1">
+                              {blog.description}
+                            </p>
+                          </div>
+                        </div>
+                      </td>
+
+                      {/* Category */}
+                      <td className="px-6 py-4">
+                        <span className="rounded-full bg-gray-200 px-3 py-1 text-sm">
+                          {blog.category}
+                        </span>
+                      </td>
+
+                      {/* Author */}
+                      <td className="px-6 py-4">
+                        <div>
+                          <p className="font-medium">{blog.author?.name}</p>
+                          <p className="text-sm text-gray-500">
+                            {blog.author?.email}
+                          </p>
+                        </div>
+                      </td>
+
+                      {/* Date */}
+
+                      <td className="px-6 py-4">
+                        {new Date(blog.createdAt).toLocaleDateString()}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
