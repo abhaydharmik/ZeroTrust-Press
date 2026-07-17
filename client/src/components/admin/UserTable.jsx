@@ -79,13 +79,14 @@ const UserTable = ({ refreshUsers, users }) => {
                 <td className="px-6 py-4">{user.email}</td>
 
                 <td className="px-6 py-4">
-                  <div className="space-y-2">
+                  <div className="space-x-4 space-y-4">
                     <RoleBadge role={user.role} />
                     <select
                       value={user.role}
                       onChange={(e) =>
                         handleRoleChange(user._id, e.target.value)
                       }
+                      className="rounded-lg border px-3 py-2 text-sm"
                     >
                       <option value="user">User</option>
                       <option value="admin">Admin</option>
