@@ -1,10 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { deleteUser, updateUserRole } from "../../services/adminService";
 import toast from "react-hot-toast";
 import RoleBadge from "./RoleBadge";
 import { Trash2 } from "lucide-react";
+import DeleteUserModal from "./DeleteUserModal";
 
 const UserTable = ({ refreshUsers, users }) => {
+
+  const [selectedUser, setSelectedUser] = useState(null)
+  const [deleteLoading, setDeleteLoading] = useState(false)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
+
   const handleRoleChange = async (userId, role) => {
     try {
       await updateUserRole(userId, role);
@@ -17,23 +23,31 @@ const UserTable = ({ refreshUsers, users }) => {
     }
   };
 
-  const handleDelete = async (id) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this user?",
-    );
+  const openDeleteModal = (user) => {
+    setSelectedUser(user)
+    setShowDeleteModal(true)
+  }
 
-    if (!confirmDelete) return;
+  const handleDelete = async () => {
+    if(!selectedUser) return
 
     try {
-      await deleteUser(id);
+      setDeleteLoading(true)
 
-      toast.success("User deleted successfully.");
+      await deleteUser(selectedUser._id)
 
-      await refreshUsers();
+      toast.success("User deleted successfully.")
+
+      await refreshUsers()
+
+      setShowDeleteModal(false)
+      setSelectedUser(null)
     } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to delete user.");
+      toast.error(error.response?.data?.message || "Failed to delete user.")
+    }finally{
+      setDeleteLoading(false)
     }
-  };
+  }
 
   if (users.length === 0) {
     return (
@@ -100,7 +114,7 @@ const UserTable = ({ refreshUsers, users }) => {
 
                 <td className="px-6 py-4 text-center">
                   <button
-                    onClick={() => handleDelete(user._id)}
+                    onClick={() => openDeleteModal(user)}
                     className="rounded-lg p-2 text-red-600 hover:bg-red-100 transition"
                   >
                     <Trash2 size={20} />
@@ -111,6 +125,15 @@ const UserTable = ({ refreshUsers, users }) => {
           })}
         </tbody>
       </table>
+      <DeleteUserModal isOpen={showDeleteModal}
+      onClose={()=> {
+        setShowDeleteModal(false)
+        setSelectedUser(null)
+      }}
+      onConfirm={handleDelete}
+      loading={deleteLoading}
+      userName={selectedUser?.name}
+      />
     </div>
   );
 };
