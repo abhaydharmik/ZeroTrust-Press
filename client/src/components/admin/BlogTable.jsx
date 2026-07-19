@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { deleteBlog } from "../../services/adminService";
 import toast from "react-hot-toast";
 import { Trash2 } from "lucide-react";
-import DeleteUserModal from "./DeleteUserModal";
+import ConfirmModal from "./ConfirmModal"
 
 const BlogTable = ({ blogs, refreshBlogs }) => {
   const [selectedBlog, setSelectedBlog] = useState(null);
@@ -94,8 +94,10 @@ const BlogTable = ({ blogs, refreshBlogs }) => {
         </table>
       </div>
 
-      <DeleteUserModal
+      <ConfirmModal
         isOpen={showDeleteModal}
+        title={"Delete Blog"}
+        message={`Are you sure you want to delete`}
         onClose={() => {
           setShowDeleteModal(false);
           setSelectedBlog(null);

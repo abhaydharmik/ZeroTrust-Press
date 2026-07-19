@@ -3,7 +3,7 @@ import { deleteUser, updateUserRole } from "../../services/adminService";
 import toast from "react-hot-toast";
 import RoleBadge from "./RoleBadge";
 import { Trash2 } from "lucide-react";
-import DeleteUserModal from "./DeleteUserModal";
+import ConfirmModal from "./ConfirmModal";
 
 const UserTable = ({ refreshUsers, users }) => {
 
@@ -125,7 +125,10 @@ const UserTable = ({ refreshUsers, users }) => {
           })}
         </tbody>
       </table>
-      <DeleteUserModal isOpen={showDeleteModal}
+      <ConfirmModal isOpen={showDeleteModal}
+              title={"Delete User"}
+        message={`Are you sure you want to delete`}
+
       onClose={()=> {
         setShowDeleteModal(false)
         setSelectedUser(null)

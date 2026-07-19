@@ -1,7 +1,7 @@
 import { AlertTriangle, Loader2 } from "lucide-react";
 import React from "react";
 
-const DeleteUserModal = ({ isOpen, onClose, onConfirm, loading, userName }) => {
+const ConfirmModal = ({title, message ,isOpen, onClose, onConfirm, loading, userName }) => {
   if (!isOpen) return null;
 
   return (
@@ -12,10 +12,10 @@ const DeleteUserModal = ({ isOpen, onClose, onConfirm, loading, userName }) => {
             <AlertTriangle className="text-red-600" size={32} />
           </div>
 
-          <h2 className="text-xl font-bold">Delete User</h2>
+          <h2 className="text-xl font-bold">{title}</h2>
 
           <p className="mt-2 text-center text-gray-600">
-            Are you sure you want to delete{" "}
+            {message}{" "}
             <span className="font-semibold">{userName}</span>?
           </p>
 
@@ -46,4 +46,4 @@ const DeleteUserModal = ({ isOpen, onClose, onConfirm, loading, userName }) => {
   );
 };
 
-export default DeleteUserModal;
+export default ConfirmModal;
