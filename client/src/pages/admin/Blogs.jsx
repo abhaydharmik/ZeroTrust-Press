@@ -18,7 +18,7 @@ const Blogs = () => {
     try {
       setLoading(true)
 
-      const {data} = await getBlogs(page=10, search)
+      const {data} = await getBlogs(page, 10, search)
 
       setBlogs(data.blogs)
       setPagination(data.pagination)
@@ -45,7 +45,7 @@ const Blogs = () => {
   }
 
   return (
-    <div className='space-y-4'>
+    <div className='space-y-6'>
       <div className='flex items-center justify-between'>
         <h1 className='text-3xl font-bold'>Blogs</h1>
 
@@ -58,6 +58,7 @@ const Blogs = () => {
         }}
        className='w-72 rounded-xl border px-4 py-3 outline-none focus:border-black'
        />
+       </div>
 
       <BlogTable 
         blogs={blogs}
@@ -70,7 +71,6 @@ const Blogs = () => {
       />
 
       </div>
-    </div>
   )
 }
 

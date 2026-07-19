@@ -26,7 +26,7 @@ const DeleteUserModal = ({ isOpen, onClose, onConfirm, loading, userName }) => {
 
         <div className="mt-6 flex justify-end gap-3">
           <button
-            onClick={onclose}
+            onClick={onClose}
             disabled={loading}
             className="rounded-lg border px-5 py-2 hover:bg-gray-100"
           >
