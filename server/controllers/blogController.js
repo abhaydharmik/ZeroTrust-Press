@@ -65,6 +65,7 @@ const getAllBlogs = async (req, res) => {
 
     const blogs = await Blog.find(query)
       .populate("author", "name email")
+      .populate("category", "name slug color")
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
@@ -89,6 +90,7 @@ const getBlogById = async (req, res) => {
   try {
     const blog = await Blog.findById(req.params.id)
       .populate("author", "name email")
+      .populate("category", "name slug color")
       .populate("comments.user", "name email");
 
     if (!blog) {
@@ -332,6 +334,7 @@ const getMyBlogs = async (req, res) => {
       author: req.user._id,
     })
       .populate("author", "name email")
+      .populate("category", "name slug color")
       .sort({ createdAt: -1 });
 
     res.status(200).json({

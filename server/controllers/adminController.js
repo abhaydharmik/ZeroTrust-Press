@@ -28,6 +28,7 @@ const getDashboardStats = async (req, res) => {
 
       Blog.find()
         .populate("author", "name email")
+        .populate("category", "name slug color")
         .sort({ createdAt: -1 })
         .limit(5),
 

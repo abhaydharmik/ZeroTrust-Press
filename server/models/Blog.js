@@ -20,9 +20,9 @@ const blogSchema = new mongoose.Schema(
       default: "",
     },
     category: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
       required: true,
-      trim: true,
     },
     author: {
       type: mongoose.Schema.Types.ObjectId,
