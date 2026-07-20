@@ -1,12 +1,12 @@
-import slugify from "slugify";
-import Blog from "../models/Blog";
-import Category from "../models/Category";
+const slugify = require("slugify");
+const Blog = require("../models/Blog");
+const Category = require("../models/Category");
 
 // @desc Create Category
 // @route POST /api/categories
 // @access Admin
 
-export const createCategory = async (req, res) => {
+const createCategory = async (req, res) => {
   try {
     const { name, description, color } = req.body;
 
@@ -52,7 +52,7 @@ export const createCategory = async (req, res) => {
 // @route GET /api/categories
 // @access Public
 
-export const getCategories = async (req, res) => {
+const getCategories = async (req, res) => {
   try {
     const categories = await Category.find().sort({ name: 1 });
 
@@ -71,7 +71,7 @@ export const getCategories = async (req, res) => {
 // @route GET /api/categories/:id
 // @access Public
 
-export const getCategoryById = async (req, res) => {
+const getCategoryById = async (req, res) => {
   try {
     const category = await Category.findById(req.params.id);
 
@@ -96,7 +96,7 @@ export const getCategoryById = async (req, res) => {
 // @route PUT /api/categories/:id
 // @access Admin
 
-export const updateCategory = async (req, res) => {
+const updateCategory = async (req, res) => {
   try {
     const { name, description, color, isActive } = req.body;
 
@@ -152,7 +152,7 @@ export const updateCategory = async (req, res) => {
 // @route DELETE /api/categories/:id
 // @access Admin
 
-export const deleteCategory = async (req, res) => {
+const deleteCategory = async (req, res) => {
   try {
     const category = await Category.findById(req.params.id);
 
@@ -185,3 +185,11 @@ export const deleteCategory = async (req, res) => {
     });
   }
 };
+
+module.exports = {
+  createCategory,
+  getCategories,
+  getCategoryById,
+  updateCategory,
+  deleteCategory,
+}

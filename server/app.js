@@ -13,6 +13,7 @@ const authRoutes = require("./routes/authRoutes")
 const userRoutes = require("./routes/userRoutes")
 const blogRoutes = require("./routes/blogRoutes")
 const uploadRoutes = require("./routes/uploadRoutes")
+const categoryRoutes = require("./routes/categoryRoutes")
 
 const app = express()
 connectDB()
@@ -27,6 +28,7 @@ app.use("/api/auth", authRoutes)
 app.use("/api/users", userRoutes)
 app.use("/api/blogs", blogRoutes)
 app.use("/api/upload", uploadRoutes)
+app.use("/api/categories", categoryRoutes)
 
 app.use("/api/admin", adminRoutes)
 
