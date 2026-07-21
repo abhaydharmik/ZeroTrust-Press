@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const Blog = require("../models/Blog");
+const Category = require("../models/Category");
 
 const getDashboardStats = async (req, res) => {
   try {
@@ -9,7 +10,7 @@ const getDashboardStats = async (req, res) => {
       totalAdmins,
       latestUsers,
       latestBlogs,
-      categories,
+      totalCategories,
     ] = await Promise.all([
       User.countDocuments(),
 
@@ -22,7 +23,7 @@ const getDashboardStats = async (req, res) => {
       User.find()
         .select("-password")
         .sort({
-          createdAt: 1,
+          createdAt: -1,
         })
         .limit(5),
 
@@ -32,7 +33,7 @@ const getDashboardStats = async (req, res) => {
         .sort({ createdAt: -1 })
         .limit(5),
 
-      Blog.distinct("category"),
+      Category.countDocuments(),
     ]);
 
     res.status(200).json({
@@ -41,7 +42,7 @@ const getDashboardStats = async (req, res) => {
         totalUsers,
         totalBlogs,
         totalAdmins,
-        totalCategories: categories.length,
+        totalCategories,
       },
       latestUsers,
       latestBlogs,
@@ -60,27 +61,29 @@ const getAllUsers = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
-    const search = req.query.search || "";
+    const search = req.query.search?.trim() || "";
 
     const skip = (page - 1) * limit;
 
     // Search Filter
-    const filter = {
-      $or: [
-        {
-          name: {
-            $regex: search,
-            $options: "i",
-          },
-        },
-        {
-          email: {
-            $regex: search,
-            $options: "i",
-          },
-        },
-      ],
-    };
+    const filter = search
+      ? {
+          $or: [
+            {
+              name: {
+                $regex: search,
+                $options: "i",
+              },
+            },
+            {
+              email: {
+                $regex: search,
+                $options: "i",
+              },
+            },
+          ],
+        }
+      : {};
 
     const [users, totalUsers] = await Promise.all([
       User.find(filter)
@@ -126,11 +129,15 @@ const deleteUser = async (req, res) => {
     }
 
     if (user.role === "admin") {
-      return res.status(200).json({
+      return res.status(403).json({
         success: false,
         message: "Cannot delete an admin account.",
       });
     }
+
+    await Blog.deleteMany({
+      author: user._id,
+    });
 
     await user.deleteOne();
 
@@ -198,30 +205,33 @@ const getAllBlogs = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
-    const search = req.query.search || "";
+    const search = req.query.search?.trim() || "";
 
     const skip = (page - 1) * limit;
 
-    const filter = {
-      $or: [
-        {
-          title: {
-            $regex: search,
-            $options: "i",
-          },
-        },
-        {
-          category: {
-            $regex: search,
-            $options: "i",
-          },
-        },
-      ],
-    };
+    const filter = search
+      ? {
+          $or: [
+            {
+              title: {
+                $regex: search,
+                $options: "i",
+              },
+            },
+            {
+              description: {
+                $regex: search,
+                $options: "i",
+              },
+            },
+          ],
+        }
+      : {};
 
     const [blogs, totalBlogs] = await Promise.all([
       Blog.find(filter)
         .populate("author", "name email avatar")
+        .populate("category", "name slug color")
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit),

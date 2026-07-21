@@ -1,8 +1,26 @@
 const Blog = require("../models/Blog");
+const Category = require("../models/Category");
 
 const createBlog = async (req, res) => {
   try {
     const { title, description, content, category } = req.body;
+
+    if (!title || !description || !content || !category) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required.",
+      });
+    }
+
+    // Check category exists
+    const existingCategory = await Category.findById(category);
+
+    if (!existingCategory) {
+      return res.status(404).json({
+        success: false,
+        message: "Category not found.",
+      });
+    }
 
     const image = req.file ? req.file.filename : "";
 
@@ -12,8 +30,11 @@ const createBlog = async (req, res) => {
       content,
       category,
       image,
-      author: req.user.id,
+      author: req.user._id,
     });
+
+    await blog.populate("author", "name email");
+    await blog.populate("category", "name slug color");
 
     res.status(201).json({
       success: true,
@@ -34,7 +55,7 @@ const getAllBlogs = async (req, res) => {
     const limit = Number(req.query.limit) || 5;
     const skip = (page - 1) * limit;
 
-    const search = req.query.search || "";
+    const search = req.query.search?.trim() || "";
     const category = req.query.category || "";
 
     const query = {};
@@ -96,7 +117,7 @@ const getBlogById = async (req, res) => {
     if (!blog) {
       return res.status(404).json({
         success: false,
-        blog: "Blog not found",
+        message: "Blog not found",
       });
     }
 
@@ -139,18 +160,33 @@ const updateBlog = async (req, res) => {
     blog.title = title || blog.title;
     blog.description = description || blog.description;
     blog.content = content || blog.content;
-    blog.category = category || blog.category;
+
+    if (category) {
+      const categoryExists = await Category.findById(category);
+
+      if (!categoryExists) {
+        return res.status(404).json({
+          success: false,
+          message: "Category not found.",
+        });
+      }
+
+      blog.category = category;
+    }
 
     if (req.file) {
       blog.image = req.file.filename;
     }
 
-    const updatedBlog = await blog.save();
+    await blog.save();
+
+    await blog.populate("author", "name email");
+    await blog.populate("category", "name slug color");
 
     res.status(200).json({
       success: true,
       message: "Blog updated successfully",
-      blog: updatedBlog,
+      blog,
     });
   } catch (error) {
     res.status(500).json({
