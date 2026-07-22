@@ -13,7 +13,7 @@ const BlogCard = ({ blog }) => {
 
       <div className="p-5">
 
-        <span className="inline-block text-xs font-semibold border border-black rounded-full px-3 py-1">{blog.category}</span>
+        <span className="inline-block text-xs font-semibold border border-black rounded-full px-3 py-1">{blog.category?.name}</span>
         <h2 className="text-2xl font-bold mt-4 line-clamp-2">{blog.title}</h2>
         <p className="text-gray-600 mt-3 line-clamp-3">{blog.description}</p>
 

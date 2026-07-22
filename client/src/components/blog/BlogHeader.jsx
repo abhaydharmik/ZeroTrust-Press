@@ -6,7 +6,7 @@ const BlogHeader = ({ blog }) => {
     <>
       {/* Category */}
       <span className="inline-block border border-black rounded-full px-4 py-2 text-sm font-medium mt-8">
-        {blog.category}
+        {blog.category?.name}
       </span>
 
       {/* Title */}

@@ -1,11 +1,14 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createBlog } from "../services/blogService";
+import { getCategories } from "../services/categoryService";
 import toast from "react-hot-toast";
 import BlogForm from "../components/blog/BlogForm";
 
 const CreateBlog = () => {
   const navigate = useNavigate();
+
+  const [categories, setCategories] = useState([]);
 
   const [loading, setLoading] = useState(false);
 
@@ -18,8 +21,6 @@ const CreateBlog = () => {
     category: "",
     image: null,
   });
-
-  const fileInputRef = useRef(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -60,10 +61,6 @@ const CreateBlog = () => {
 
       setPreview(null);
 
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
-
       navigate("/my-blogs");
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to create blog");
@@ -71,6 +68,20 @@ const CreateBlog = () => {
       setLoading(false);
     }
   };
+
+  const fetchCategories = async () => {
+    try {
+      const { data } = await getCategories();
+
+      setCategories(data.categories.filter((category) => category.isActive));
+    } catch (error) {
+      toast.error("Failed to load categories.");
+    }
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
   return (
     <div className="max-w-5xl mx-auto px-5 py-12">
@@ -83,6 +94,7 @@ const CreateBlog = () => {
         setPreview={setPreview}
         handleSubmit={handleSubmit}
         loading={loading}
+        categories={categories}
       />
     </div>
   );

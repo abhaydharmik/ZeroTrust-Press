@@ -7,11 +7,14 @@ import BlogForm from "../components/blog/BlogForm";
 import { getBlogById, updateBlog } from "../services/blogService";
 
 import Loader from "../components/common/Loader";
+import { getCategories } from "../services/categoryService";
 
 const EditBlog = () => {
   const { id } = useParams();
 
   const navigate = useNavigate();
+
+  const [categories, setCategories] = useState([]);
 
   const [loading, setLoading] = useState(false);
 
@@ -38,7 +41,7 @@ const EditBlog = () => {
       setFormData({
         title: blog.title,
         description: blog.description,
-        category: blog.category,
+        category: blog.category?._id || "",
         content: blog.content,
         image: null,
       });
@@ -55,9 +58,23 @@ const EditBlog = () => {
     }
   };
 
+  const fetchCategories = async () => {
+    try {
+      const { data } = await getCategories();
+
+      setCategories(data.categories.filter((category) => category.isActive));
+    } catch (error) {
+      toast.error("Failed to load categories.");
+    }
+  };
+
   useEffect(() => {
     fetchBlog();
   }, [id]);
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
   // Update Blog
   const handleSubmit = async (e) => {
@@ -112,6 +129,7 @@ const EditBlog = () => {
         handleSubmit={handleSubmit}
         loading={loading}
         isEdit={true}
+        categories={categories}
       />
     </div>
   );

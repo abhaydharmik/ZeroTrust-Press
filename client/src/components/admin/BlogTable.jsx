@@ -74,7 +74,7 @@ const BlogTable = ({ blogs, refreshBlogs }) => {
                     />
                   </td>
                   <td className="px-6 py-4 font-medium">{blog.title}</td>
-                  <td className="px-6 py-4">{blog.category}</td>
+                  <td className="px-6 py-4">{blog.category?.name}</td>
                   <td className="px-6 py-4">
                     {blog.author?.name || "Unknown"}
                   </td>

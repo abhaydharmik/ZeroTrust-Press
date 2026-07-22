@@ -2,16 +2,6 @@ import { Upload } from "lucide-react";
 import React, { useEffect } from "react";
 import toast from "react-hot-toast";
 
-const categories = [
-  "React",
-  "Node",
-  "Express",
-  "MongoDB",
-  "Backend",
-  "Frontend",
-  "JavaScript",
-];
-
 const BlogForm = ({
   formData,
   setFormData,
@@ -19,6 +9,7 @@ const BlogForm = ({
   setPreview,
   handleSubmit,
   loading,
+  categories = [],
   isEdit = false,
 }) => {
   const handleChange = (e) => {
@@ -34,11 +25,13 @@ const BlogForm = ({
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
+      e.target.value = ""
       toast.error("Please select an image.");
       return;
     }
-
+    
     if (file.size > 5 * 1024 * 1024) {
+      e.target.value = ""
       toast.error("Image size must be below 5MB.");
       return;
     }
@@ -131,12 +124,13 @@ const BlogForm = ({
           name="category"
           value={formData.category}
           onChange={handleChange}
+          disabled={categories.length === 0}
           className="w-full border rounded-xl p-4 outline-none focus:border-black"
         >
           <option value="">Select Category</option>
           {categories.map((category) => (
-            <option key={category} value={category}>
-              {category}
+            <option key={category._id} value={category._id}>
+              {category.name}
             </option>
           ))}
         </select>
