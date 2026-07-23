@@ -165,7 +165,7 @@ const Dashboard = () => {
                     ? blog.image.startsWith("http")
                       ? blog.image
                       : `http://localhost:5000/uploads/${blog.image}`
-                    : "https://placeholder.co/100x70?text=No+Image";
+                    : "https://placehold.co/100x70?text=No+Image";
 
                   return (
                     <tr

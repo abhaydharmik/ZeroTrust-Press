@@ -1,5 +1,5 @@
 import React from "react";
-import { FileText, LayoutDashboard, LogOut, Users, X } from "lucide-react";
+import { FileText, LayoutDashboard, LogOut, Tag, Users, X } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
@@ -28,6 +28,11 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
       name: "Blogs",
       path: "/admin/blogs",
       icon: <FileText size={20} />,
+    },
+    {
+      name: "Categories",
+      path: "/admin/categories",
+      icon: <Tag size={20} />
     },
   ];
 

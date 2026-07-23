@@ -14,6 +14,7 @@ import Dashboard from "./pages/admin/Dashboard";
 import Users from "./pages/admin/Users";
 import Blogs from "./pages/admin/Blogs";
 import ProtectedAdminRoute from "./components/admin/ProtectedAdminRoute";
+import Categories from "./pages/admin/Categories";
 
 const App = () => {
   return (
@@ -72,6 +73,7 @@ const App = () => {
         <Route index element={<Dashboard />} />
         <Route path="users" element={<Users />} />
         <Route path="blogs" element={<Blogs />} />
+        <Route path="categories" element={<Categories />} />
       </Route>
     </Routes>
   );
