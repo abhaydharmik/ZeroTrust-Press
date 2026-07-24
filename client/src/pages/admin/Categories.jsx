@@ -21,7 +21,7 @@ const Categories = () => {
 
       const { data } = await getCategories();
 
-      setCategories(data.categories);
+      setCategories(data.categories|| []);
     } catch (error) {
       toast.error(
         error.response?.data?.message || " Failed to load categories.",
@@ -44,7 +44,12 @@ const Categories = () => {
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">Categories</h1>
 
-        <button className="flex items-center gap-2 rounded-lg bg-black px-5 py-3 text-white transition hover:bg-gray-800">
+        <button
+          onClick={() => {
+            (setSelectedCategory(null), setShowModal(true));
+          }}
+          className="flex items-center gap-2 rounded-lg bg-black px-5 py-3 text-white transition hover:bg-gray-800"
+        >
           <Plus size={18} />
           Add Category
         </button>
