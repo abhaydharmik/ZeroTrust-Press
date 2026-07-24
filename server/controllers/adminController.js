@@ -334,6 +334,166 @@ const getAnalytics = async (req, res) => {
       },
     ]);
 
+    const monthlyBlogs = await Blog.aggregate([
+      {
+        $group: {
+          _id: {
+            year: { $year: "$createdAt" },
+            month: { $month: "$createdAt" },
+          },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $sort: {
+          "_id.year": 1,
+          "_id.month": 1,
+        },
+      },
+    ]);
+
+    const monthlyUsers = await User.aggregate([
+      {
+        $group: {
+          _id: {
+            year: { $year: "$createdAt" },
+            month: { $month: "$createdAt" },
+          },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $sort: {
+          "_id.year": 1,
+          "_id.month": 1,
+        },
+      },
+    ]);
+
+    const blogByCategory = await Blog.aggregate([
+      {
+        $group: {
+          _id: "$category",
+          total: {
+            $sum: 1,
+          },
+        },
+      },
+      {
+        $lookup: {
+          from: "categories",
+          localField: "_id",
+          foreignField: "_id",
+          as: "category",
+        },
+      },
+      {
+        $unwind: "$category",
+      },
+      {
+        $project: {
+          _id: 0,
+          name: "$category.name",
+          color: "$category.color",
+          total: 1,
+        },
+      },
+    ]);
+
+    const topAuthors = await Blog.aggregate([
+      {
+        $group: {
+          _id: "$author",
+          totalBlogs: {
+            $sum: 1,
+          },
+        },
+      },
+      {
+        $sort: {
+          totalBlogs: -1,
+        },
+      },
+      {
+        $limit: 5,
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "_id",
+          foreignField: "_id",
+          as: "author",
+        },
+      },
+      {
+        $unwind: "$author",
+      },
+      {
+        $project: {
+          _id: 0,
+          name: "$author.name",
+          avatar: "$author.avatar",
+          totalBlogs: 1,
+        },
+      },
+    ]);
+
+    const popularBlogs = await Blog.aggregate([
+      {
+        $project: {
+          title: 1,
+          likes: {
+            $size: {
+              $ifNull: ["$likes", []],
+            },
+          },
+        },
+      },
+      {
+        $sort: {
+          likes: -1,
+        },
+      },
+      {
+        $limit: 5,
+      },
+    ]);
+
+    const recentComments = await Blog.aggregate([
+      {
+        $unwind: "$comments",
+      },
+      {
+        $sort: {
+          "comments.createdAt": -1,
+        },
+      },
+      {
+        $limit: 5,
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "comments.user",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      {
+        $unwind: "$user",
+      },
+      {
+        $project: {
+          _id: 0,
+          comment: "$comments.text",
+          createdAt: "$comments.createdAt",
+          blogTitle: "$title",
+          userName: "$user.name",
+          userAvatar: "$user.avatar",
+        },
+      },
+    ]);
+
     res.status(200).json({
       success: true,
       analytics: {
@@ -344,9 +504,16 @@ const getAnalytics = async (req, res) => {
           commentStats.length > 0 ? commentStats[0].totalComments : 0,
         totalLikes: totalLikes.length > 0 ? totalLikes[0].totalLikes : 0,
       },
+      monthlyBlogs,
+      monthlyUsers,
+      blogByCategory,
+      topAuthors,
+      popularBlogs,
+      recentComments,
     });
   } catch (error) {
     res.status(500).json({
+      success: false,
       message: error.message,
     });
   }
