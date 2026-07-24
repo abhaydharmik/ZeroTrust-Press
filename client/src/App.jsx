@@ -15,6 +15,7 @@ import Users from "./pages/admin/Users";
 import Blogs from "./pages/admin/Blogs";
 import ProtectedAdminRoute from "./components/admin/ProtectedAdminRoute";
 import Categories from "./pages/admin/Categories";
+import MainLayout from "./layouts/MainLayout";
 
 const App = () => {
   return (
@@ -22,46 +23,19 @@ const App = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route
-        path="/"
         element={
           <ProtectedRoute>
-            <Home />
+            <MainLayout />
           </ProtectedRoute>
         }
-      />
-      <Route path="/blog/:id" element={<BlogDetails />} />
-      <Route
-        path="/create-blog"
-        element={
-          <ProtectedRoute>
-            <CreateBlog />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/edit-blog/:id"
-        element={
-          <ProtectedRoute>
-            <EditBlog />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/my-blogs"
-        element={
-          <ProtectedRoute>
-            <MyBlogs />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/profile"
-        element={
-          <ProtectedRoute>
-            <Profile />
-          </ProtectedRoute>
-        }
-      />
+      >
+        <Route path="/" element={<Home />} />
+        <Route path="/blog/:id" element={<BlogDetails />} />
+        <Route path="/create-blog" element={<CreateBlog />} />
+        <Route path="/edit-blog/:id" element={<EditBlog />} />
+        <Route path="/my-blogs" element={<MyBlogs />} />
+        <Route path="/profile" element={<Profile />} />
+      </Route>
       <Route
         path="/admin"
         element={
