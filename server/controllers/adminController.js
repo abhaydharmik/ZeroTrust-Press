@@ -286,6 +286,72 @@ const deleteBlog = async (req, res) => {
   }
 };
 
+const getAnalytics = async (req, res) => {
+  try {
+    const [totalUsers, totalBlogs, totalCategories] = await Promise.all([
+      User.countDocuments(),
+      Blog.countDocuments(),
+      Category.countDocuments(),
+    ]);
+
+    const commentStats = await Blog.aggregate([
+      {
+        $project: {
+          totalComments: {
+            $size: {
+              $ifNull: ["$comments", []],
+            },
+          },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalComments: {
+            $sum: "$totalComments",
+          },
+        },
+      },
+    ]);
+
+    const totalLikes = await Blog.aggregate([
+      {
+        $project: {
+          likes: {
+            $size: {
+              $ifNull: ["$likes", []],
+            },
+          },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalLikes: {
+            $sum: "$likes",
+          },
+        },
+      },
+    ]);
+
+    res.status(200).json({
+      success: true,
+      analytics: {
+        totalUsers,
+        totalBlogs,
+        totalCategories,
+        totalComments:
+          commentStats.length > 0 ? commentStats[0].totalComments : 0,
+        totalLikes: totalLikes.length > 0 ? totalLikes[0].totalLikes : 0,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   getDashboardStats,
   getAllUsers,
@@ -293,4 +359,5 @@ module.exports = {
   updateUserRole,
   getAllBlogs,
   deleteBlog,
+  getAnalytics,
 };

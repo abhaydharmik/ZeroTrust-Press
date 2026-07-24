@@ -6,7 +6,7 @@ const authMiddleware = require("../middleware/authMiddleware");
 
 const adminMiddleware = require("../middleware/adminMiddleware");
 
-const { getDashboardStats, getAllUsers, deleteUser, updateUserRole, getAllBlogs, deleteBlog } = require("../controllers/adminController");
+const { getDashboardStats, getAllUsers, deleteUser, updateUserRole, getAllBlogs, deleteBlog, getAnalytics } = require("../controllers/adminController");
 
 router.get(
   "/dashboard",
@@ -31,5 +31,7 @@ router.put("/users/:id/role", authMiddleware, adminMiddleware, updateUserRole)
 router.get("/blogs/", authMiddleware, adminMiddleware, getAllBlogs)
 
 router.delete("/blogs/:id", authMiddleware, adminMiddleware, deleteBlog)
+
+router.get("/analytics", authMiddleware, adminMiddleware, getAnalytics)
 
 module.exports = router;
