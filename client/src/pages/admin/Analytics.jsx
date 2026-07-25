@@ -37,9 +37,9 @@ const Analytics = () => {
 
   return (
     <div className="space-y-6">
-      <h1>Analytics Dashboard</h1>
+      <h1 className="text-3xl font-bold">Analytics Dashboard</h1>
 
-      <AnalyticsCard overview={analytics.overview} />
+      <AnalyticsCard overview={analytics} />
 
       <div className="grid gap-6 lg:grid-cols-2">
         <CategoryPieChart data={analytics.blosByCategory} />
