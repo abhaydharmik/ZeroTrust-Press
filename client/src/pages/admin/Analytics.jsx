@@ -21,7 +21,7 @@ const Analytics = () => {
 
       const { data } = await getAnalytics();
 
-      setAnalytics(data.analytics);
+      setAnalytics(data);
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to load analytics.");
     } finally {
@@ -42,7 +42,7 @@ const Analytics = () => {
       <AnalyticsCard overview={analytics} />
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <CategoryPieChart data={analytics.blosByCategory} />
+        <CategoryPieChart data={analytics.blogByCategory} />
         <MonthlyBlogsChart data={analytics.monthlyBlogs} />
       </div>
 

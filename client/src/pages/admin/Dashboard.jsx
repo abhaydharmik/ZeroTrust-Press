@@ -105,7 +105,7 @@ const Dashboard = () => {
                       : `http://localhost:5000/uploads/${user.avatar}`
                     : `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=000000&color=ffffff`;
                   return (
-                    <tr className="border-b hover:bg-gray-50 transition">
+                    <tr key={user.id} className="border-b hover:bg-gray-50 transition">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
                           <img
@@ -192,7 +192,7 @@ const Dashboard = () => {
                       {/* Category */}
                       <td className="px-6 py-4">
                         <span className="rounded-full bg-gray-200 px-3 py-1 text-sm">
-                          {blog.category}
+                          {blog.category?.name}
                         </span>
                       </td>
 
