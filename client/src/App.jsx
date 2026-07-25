@@ -16,6 +16,7 @@ import Blogs from "./pages/admin/Blogs";
 import ProtectedAdminRoute from "./components/admin/ProtectedAdminRoute";
 import Categories from "./pages/admin/Categories";
 import MainLayout from "./layouts/MainLayout";
+import Analytics from "./pages/admin/Analytics";
 
 const App = () => {
   return (
@@ -48,6 +49,7 @@ const App = () => {
         <Route path="users" element={<Users />} />
         <Route path="blogs" element={<Blogs />} />
         <Route path="categories" element={<Categories />} />
+        <Route path="analytics" element={<Analytics />} />
       </Route>
     </Routes>
   );
