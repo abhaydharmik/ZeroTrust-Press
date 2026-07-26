@@ -39,7 +39,7 @@ const Analytics = () => {
     <div className="space-y-6">
       <h1 className="text-3xl font-bold">Analytics Dashboard</h1>
 
-      <AnalyticsCard overview={analytics} />
+      <AnalyticsCard overview={analytics.analytics} />
 
       <div className="grid gap-6 lg:grid-cols-2">
         <CategoryPieChart data={analytics.blogByCategory} />
