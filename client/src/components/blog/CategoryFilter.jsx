@@ -25,7 +25,7 @@ const CategoryFilter = ({ category, setCategory }) => {
   }, []);
 
   return (
-    <div className="flex flex-wrap justify-center gap-3 mb-8">
+    <div className="flex flex-wrap justify-center gap-3">
       <button
         onClick={() => setCategory("")}
         className={`px-4 py-2 rounded-full border transition ${

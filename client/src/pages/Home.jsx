@@ -26,7 +26,7 @@ const Home = () => {
         search,
         category,
         page: currentPage,
-        limit: 2,
+        limit: 3,
       });
 
       setBlogs(data.blogs);
@@ -48,9 +48,8 @@ const Home = () => {
   }, [search, category, currentPage]);
 
   useEffect(() => {
-    setCurrentPage(1)
-  }, [search, category])
-  
+    setCurrentPage(1);
+  }, [search, category]);
 
   if (loading) return <Loader />;
 
@@ -58,9 +57,13 @@ const Home = () => {
     <div className="max-w-7xl mx-auto px-5 py-10">
       <h1 className="text-4xl font-bold mb-8">Latest Blogs</h1>
 
-      <div className="mb-10 flex justify-center">
-        <SearchBar search={search} setSearch={setSearch} />
-        <CategoryFilter category={category} setCategory={setCategory} />
+      <div className="mb-10 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+        <div>
+          <CategoryFilter category={category} setCategory={setCategory} />
+        </div>
+        <div className="flex items-center justify-center">
+          <SearchBar search={search} setSearch={setSearch} />
+        </div>
       </div>
 
       {blogs.length === 0 ? (
