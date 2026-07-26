@@ -79,7 +79,23 @@ const getAllBlogs = async (req, res) => {
     }
 
     if (category) {
-      query.category = category;
+      const categoryDoc = await Category.findOne({
+        slug: category,
+        isActive: true,
+      });
+
+      if (!categoryDoc) {
+        return res.status(200).json({
+          success: true,
+          blogs: [],
+          totalBlogs: 0,
+          totalPages: 0,
+          currentPage: page,
+          count: 0,
+        });
+      }
+
+      query.category = categoryDoc._id;
     }
 
     const totalBlogs = await Blog.countDocuments(query);
