@@ -22,7 +22,7 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      ename: ["user", "admin"],
+      enum: ["user", "admin"],
       default: "user",
     },
     avatar: {
@@ -58,6 +58,12 @@ const userSchema = new mongoose.Schema(
       {
         type: String,
       },
+    ],
+    bookmarks: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Blog",
+      }
     ],
   },
   {
