@@ -22,7 +22,6 @@ const Analytics = () => {
       const { data } = await getAnalytics();
 
       setAnalytics(data);
-      console.log(data.topAuthors)
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to load analytics.");
     } finally {
