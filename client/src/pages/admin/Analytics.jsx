@@ -22,6 +22,7 @@ const Analytics = () => {
       const { data } = await getAnalytics();
 
       setAnalytics(data);
+      console.log(data.topAuthors)
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to load analytics.");
     } finally {
@@ -47,7 +48,7 @@ const Analytics = () => {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
-        <TopAuthors author={analytics.topAuthors} />
+        <TopAuthors authors={analytics.topAuthors} />
         <PopularBlogs blogs={analytics.popularBlogs} />
         <RecentComments comments={analytics.recentComments} />
       </div>
