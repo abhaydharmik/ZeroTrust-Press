@@ -28,7 +28,7 @@ const MyBlogCard = ({ blog, onDelete }) => {
         {/* Category */}
 
         <span className="border rounded-full px-3 py-1 text-xs font-medium">
-          {blog.category}
+          {blog.category?.name}
         </span>
 
         {/* Title */}
