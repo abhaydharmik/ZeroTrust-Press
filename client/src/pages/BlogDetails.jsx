@@ -8,6 +8,8 @@ import BlogHeader from "../components/blog/BlogHeader";
 import LikeButton from "../components/blog/LikeButton";
 import CommentForm from "../components/blog/CommentForm";
 import CommentCard from "../components/blog/CommentCard";
+import BookmarkButton from "../components/blog/BookmarkButton";
+import { getBookmarks } from "../services/bookmarkService";
 
 const BlogDetails = () => {
   const { id } = useParams();
@@ -24,11 +26,25 @@ const BlogDetails = () => {
 
   const [commentLoading, setCommentLoading] = useState(false);
 
+  const [isBookmarked, setIsBookmarked] = useState(false);
+
   const fetchBlog = async () => {
     try {
       const { data } = await getBlogById(id);
 
       setBlog(data.blog);
+
+      if (user) {
+        const { data: bookmarkData } = await getBookmarks();
+
+        setIsBookmarked(
+          bookmarkData.bookmarks.some(
+            (bookmark) => bookmark._id.toString() === id.toString(),
+          ),
+        );
+      } else {
+        setIsBookmarked(false);
+      }
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to fetch blog");
     } finally {
@@ -38,7 +54,7 @@ const BlogDetails = () => {
 
   useEffect(() => {
     fetchBlog();
-  }, [id]);
+  }, [id, user]);
 
   const handleLike = async () => {
     try {
@@ -108,12 +124,16 @@ const BlogDetails = () => {
 
       {/* Actions */}
 
-      <LikeButton
-        blog={blog}
-        liked={liked}
-        likeLoading={likeLoading}
-        handleLike={handleLike}
-      />
+      <div className="flex justify-between">
+        <LikeButton
+          blog={blog}
+          liked={liked}
+          likeLoading={likeLoading}
+          handleLike={handleLike}
+        />
+
+        <BookmarkButton blogId={blog._id} initialBookmarked={isBookmarked} />
+      </div>
 
       {/* Content */}
 

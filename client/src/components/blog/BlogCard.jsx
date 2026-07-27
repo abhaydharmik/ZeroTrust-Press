@@ -1,8 +1,9 @@
 import React from "react";
 import {Link} from "react-router-dom"
 import { ArrowRight, Heart, MessageCircle } from "lucide-react";
+import BookmarkButton from "./BookmarkButton";
 
-const BlogCard = ({ blog }) => {
+const BlogCard = ({ blog, isBookmarked }) => {
   return (
     <div className="bg-white border border-gray-200 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
       <img
@@ -34,6 +35,10 @@ const BlogCard = ({ blog }) => {
               <span>{blog.comments.length}</span>
             </div>
 
+            <BookmarkButton blogId={blog._id}
+            initialBookmarked={isBookmarked}
+            />
+            
           </div>
         </div>
 

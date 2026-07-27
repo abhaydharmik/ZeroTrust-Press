@@ -5,6 +5,7 @@ import BlogCard from "../components/blog/BlogCard";
 import SearchBar from "../components/blog/SearchBar";
 import CategoryFilter from "../components/blog/CategoryFilter";
 import Pagination from "../components/blog/Pagination";
+import { getBookmarks } from "../services/bookmarkService";
 
 const Home = () => {
   const [blogs, setBlogs] = useState([]);
@@ -19,19 +20,25 @@ const Home = () => {
 
   const [totalPages, setTotalPages] = useState(1);
 
+  const [bookmarks, setBookmarks] = useState([]);
+
   const fetchBlogs = async () => {
     try {
       setLoading(true);
-      const { data } = await getBlogs({
-        search,
-        category,
-        page: currentPage,
-        limit: 3,
-      });
+      const [{ data: blogData }, { data: bookmarkData }] = await Promise.all([
+        getBlogs({
+          search,
+          category,
+          page: currentPage,
+          limit: 3,
+        }),
+        getBookmarks(),
+      ]);
 
-      setBlogs(data.blogs);
+      setBlogs(blogData.blogs);
 
-      setTotalPages(data.totalPages);
+      setTotalPages(blogData.totalPages);
+      setBookmarks(bookmarkData.bookmarks);
     } catch (error) {
       console.log(error);
     } finally {
@@ -75,7 +82,9 @@ const Home = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {blogs.map((blog) => (
-            <BlogCard key={blog._id} blog={blog} />
+            <BlogCard key={blog._id} blog={blog} 
+            isBookmarked={bookmarks.some((bookmark)=> bookmark._id.toString()=== blog._id.toString())}
+            />
           ))}
         </div>
       )}

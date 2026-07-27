@@ -17,6 +17,7 @@ import ProtectedAdminRoute from "./components/admin/ProtectedAdminRoute";
 import Categories from "./pages/admin/Categories";
 import MainLayout from "./layouts/MainLayout";
 import Analytics from "./pages/admin/Analytics";
+import Bookmarks from "./pages/Bookmarks";
 
 const App = () => {
   return (
@@ -36,6 +37,7 @@ const App = () => {
         <Route path="/edit-blog/:id" element={<EditBlog />} />
         <Route path="/my-blogs" element={<MyBlogs />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/bookmarks" element={<Bookmarks />} />
       </Route>
       <Route
         path="/admin"

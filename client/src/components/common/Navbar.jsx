@@ -1,13 +1,6 @@
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import {
-  Menu,
-  X,
-  Plus,
-  User,
-  LogOut,
-  NotebookPen,
-} from "lucide-react";
+import { Menu, X, Plus, User, LogOut, NotebookPen } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 
 const Navbar = () => {
@@ -24,20 +17,14 @@ const Navbar = () => {
 
   const navLink = ({ isActive }) =>
     `relative text-base font-medium transition-all duration-200 ${
-      isActive
-        ? "text-black"
-        : "text-gray-600 hover:text-black"
+      isActive ? "text-black" : "text-gray-600 hover:text-black"
     } after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:bg-black after:rounded-full after:transition-all after:duration-300 ${
-      isActive
-        ? "after:w-full"
-        : "after:w-0 hover:after:w-full"
+      isActive ? "after:w-full" : "after:w-0 hover:after:w-full"
     }`;
 
   const mobileLink = ({ isActive }) =>
     `block rounded-lg px-4 py-3 text-base font-medium transition ${
-      isActive
-        ? "bg-black text-white"
-        : "text-gray-700 hover:bg-gray-100"
+      isActive ? "bg-black text-white" : "text-gray-700 hover:bg-gray-100"
     }`;
 
   return (
@@ -45,34 +32,25 @@ const Navbar = () => {
       <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/80 backdrop-blur-lg">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 lg:px-8">
           {/* Logo */}
-          <NavLink
-            to="/"
-            className="flex items-center gap-3"
-          >
+          <NavLink to="/" className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-black text-white">
               <NotebookPen size={20} />
             </div>
 
-            <span className="text-xl font-bold tracking-wide">
-              BlogHub
-            </span>
+            <span className="text-xl font-bold tracking-wide">BlogHub</span>
           </NavLink>
 
           {/* Desktop Navigation */}
           <nav className="hidden items-center gap-8 md:flex">
-            <NavLink
-              to="/"
-              end
-              className={navLink}
-            >
+            <NavLink to="/" end className={navLink}>
               Home
             </NavLink>
 
-            <NavLink
-              to="/my-blogs"
-              className={navLink}
-            >
+            <NavLink to="/my-blogs" className={navLink}>
               My Blogs
+            </NavLink>
+            <NavLink to="/bookmarks" className={navLink}>
+              Bookmarks
             </NavLink>
           </nav>
 
@@ -106,11 +84,7 @@ const Navbar = () => {
             onClick={() => setMenuOpen(!menuOpen)}
             className="rounded-lg p-2 hover:bg-gray-100 md:hidden"
           >
-            {menuOpen ? (
-              <X size={24} />
-            ) : (
-              <Menu size={24} />
-            )}
+            {menuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
 
