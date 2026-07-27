@@ -1,5 +1,6 @@
 const Blog = require("../models/Blog");
 const Category = require("../models/Category");
+const User = require("../models/User");
 
 const createBlog = async (req, res) => {
   try {
@@ -436,44 +437,72 @@ const getDashboardStats = async (req, res) => {
 
 const toggleBookmark = async (req, res) => {
   try {
-    
-    const { blogId } = req.params
+    const { blogId } = req.params;
 
     // Check if blog exists
-    const blog = await Blog.findById(blogId)
+    const blog = await Blog.findById(blogId);
 
-    if(!blog){
+    if (!blog) {
       return res.status(404).json({
         success: false,
         message: "Blog not found",
-      })
+      });
     }
 
-    const user = await User.findById(req.user.id)
+    const user = await User.findById(req.user.id);
 
-    const isBookmarked = user.bookmarks.some((id)=> id.toString() === blogId)
+    const isBookmarked = user.bookmarks.some((id) => id.toString() === blogId);
 
-    if(isBookmarked){
-      user.bookmarks.pull(blogId)
-    }else{
-      user.bookmarks.push(blogId)
+    if (isBookmarked) {
+      user.bookmarks.pull(blogId);
+    } else {
+      user.bookmarks.push(blogId);
     }
 
-    await user.save()
+    await user.save();
 
     res.status(200).json({
       success: true,
-      message: isBookmarked ? "Bookmark removed successfully" : "Blog bookmarked successfully",
+      message: isBookmarked
+        ? "Bookmark removed successfully"
+        : "Blog bookmarked successfully",
       bookmarked: !isBookmarked,
-    })
-
+    });
   } catch (error) {
     res.status(500).json({
       success: false,
       message: error.message,
-    })
+    });
   }
-}
+};
+
+const getBookmarks = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).populate({
+      path: "bookmarks",
+      populate: [
+        {
+          path: "author",
+          select: "name avatar",
+        },
+        {
+          path: "category",
+          select: "name color",
+        },
+      ],
+    });
+
+    res.status(200).json({
+      success: true,
+      bookmarks: user.bookmarks,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 
 module.exports = {
   createBlog,
@@ -487,4 +516,5 @@ module.exports = {
   addComment,
   deleteComment,
   toggleBookmark,
+  getBookmarks,
 };
