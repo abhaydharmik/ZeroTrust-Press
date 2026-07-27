@@ -434,6 +434,47 @@ const getDashboardStats = async (req, res) => {
   }
 };
 
+const toggleBookmark = async (req, res) => {
+  try {
+    
+    const { blogId } = req.params
+
+    // Check if blog exists
+    const blog = await Blog.findById(blogId)
+
+    if(!blog){
+      return res.status(404).json({
+        success: false,
+        message: "Blog not found",
+      })
+    }
+
+    const user = await User.findById(req.user.id)
+
+    const isBookmarked = user.bookmarks.some((id)=> id.toString() === blogId)
+
+    if(isBookmarked){
+      user.bookmarks.pull(blogId)
+    }else{
+      user.bookmarks.push(blogId)
+    }
+
+    await user.save()
+
+    res.status(200).json({
+      success: true,
+      message: isBookmarked ? "Bookmark removed successfully" : "Blog bookmarked successfully",
+      bookmarked: !isBookmarked,
+    })
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    })
+  }
+}
+
 module.exports = {
   createBlog,
   getAllBlogs,
@@ -445,4 +486,5 @@ module.exports = {
   likeBlog,
   addComment,
   deleteComment,
+  toggleBookmark,
 };
