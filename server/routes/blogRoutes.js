@@ -13,6 +13,9 @@ const {
   deleteComment,
   getMyBlogs,
   getDashboardStats,
+  getBookmarks,
+  toggleBookmark,
+
 } = require("../controllers/blogController");
 const authMiddleware = require("../middleware/authMiddleware");
 
@@ -21,6 +24,12 @@ router.post("/", authMiddleware, upload.single("image"), createBlog);
 router.get("/", getAllBlogs);
 router.get("/my-blogs", authMiddleware, getMyBlogs);
 router.get("/dashboard", authMiddleware, getDashboardStats);
+
+
+router.get("/bookmarks", authMiddleware, getBookmarks);
+
+router.put("/:blogId/bookmark", authMiddleware, toggleBookmark);
+
 router.get("/:id", getBlogById);
 
 router.put("/:id", authMiddleware, upload.single("image"), updateBlog);
